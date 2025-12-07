@@ -1,14 +1,24 @@
 import uvicorn
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from typing import List, Dict, Any, Optional
 import uuid
 import threading
+import os
 
 from graph import app
 from state import AgentState
 
 api = FastAPI(title="Langie - Invoice Processing Agent")
+
+# Mount Static Files
+api.mount("/static", StaticFiles(directory="static"), name="static")
+
+@api.get("/")
+async def read_index():
+    return FileResponse('static/index.html')
 
 # --- In-Memory Queue for Demo ---
 # In a real app, this would be Redis or a DB table populated by the CHECKPOINT_HITL node

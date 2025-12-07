@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Langie - Intelligent Invoice Agent</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/input.css">
+</head>
+<body class="bg-gray-900 text-white font-inter antialiased min-h-screen flex flex-col items-center py-10">
+
+    <header class="w-full max-w-4xl mb-12 flex justify-between items-center px-4">
+        <h1 class="text-3xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-violet-400 to-fuchsia-400">
+            Langie
+        </h1>
+        <div class="flex items-center gap-2">
+            <span class="text-sm text-gray-400">Invoice Processing Agent</span>
+            <div class="h-2 w-2 rounded-full bg-green-400 animate-pulse"></div>
+        </div>
+    </header>
+
+    <main class="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-8 px-4">
+        
+        <!-- Start Workflow Card -->
+        <section class="glass-card p-6 rounded-2xl md:col-span-2">
+            <h2 class="text-xl font-semibold mb-4 text-violet-100">Start New Workflow</h2>
+            <form id="start-form" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-xs font-medium text-gray-400 mb-1">Invoice ID</label>
+                    <input type="text" name="invoice_id" value="INV-001" class="input-field" required>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-400 mb-1">Vendor</label>
+                    <input type="text" name="vendor_name" value="Acme Corp" class="input-field" required>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-400 mb-1">Amount</label>
+                    <input type="number" name="amount" value="1500.00" class="input-field" required>
+                </div>
+                <div class="md:col-span-3 flex justify-end">
+                    <button type="submit" class="btn-primary">
+                        Processing Invoice
+                        <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Active Workflow Status -->
+        <section class="glass-card p-6 rounded-2xl">
+            <h2 class="text-xl font-semibold mb-4 text-violet-100">Live Status</h2>
+            <div id="status-display" class="min-h-[150px] flex flex-col justify-center items-center text-center">
+                <p class="text-gray-400">No active workflow.</p>
+            </div>
+        </section>
+
+        <!-- Pending Reviews -->
+        <section class="glass-card p-6 rounded-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold text-violet-100">Human Review Queue</h2>
+                <span id="queue-count" class="bg-violet-500/20 text-violet-300 text-xs px-2 py-1 rounded-full">0 Pending</span>
+            </div>
+            <div id="review-list" class="space-y-4 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                <!-- Items will be injected here -->
+                <div class="text-sm text-gray-500 text-center py-4">Queue is empty.</div>
+            </div>
+        </section>
+        
+        <!-- Review Action Modal (Hidden by default) -->
+        <dialog id="review-modal" class="glass-card p-0 rounded-2xl backdrop:bg-black/50 backdrop:backdrop-blur-sm w-full max-w-md ml-auto mr-auto mt-20 text-white">
+            <div class="p-6">
+                <h3 class="text-lg font-bold mb-2">Review Decision</h3>
+                <p class="text-sm text-gray-300 mb-4">Action required for <span id="modal-id" class="font-mono text-violet-300"></span></p>
+                
+                <form id="decision-form" class="space-y-4">
+                    <input type="hidden" name="checkpoint_id" id="modal-checkpoint-id">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-400 mb-1">Notes (Optional)</label>
+                        <textarea name="notes" class="input-field h-20" placeholder="Reason for decision..."></textarea>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button type="button" onclick="submitDecision('ACCEPT')" class="btn-success">Accept</button>
+                        <button type="button" onclick="submitDecision('REJECT')" class="btn-danger">Reject</button>
+                    </div>
+                    <button type="button" onclick="submitDecision('CLARIFY')" class="btn-secondary w-full mt-2">Request Clarification</button>
+                </form>
+            </div>
+            <div class="bg-white/5 p-3 flex justify-end">
+                <button onclick="document.getElementById('review-modal').close()" class="text-sm text-gray-400 hover:text-white">Cancel</button>
+            </div>
+        </dialog>
+
+    </main>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
